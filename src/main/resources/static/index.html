@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sleep Scheduler</title>
+</head>
+<body>
+
+<h1>Sleep Scheduler</h1>
+
+<h2>Register User</h2>
+<input type="text" id="name" placeholder="Name"><br><br>
+<input type="email" id="email" placeholder="Email"><br><br>
+<input type="password" id="password" placeholder="Password"><br><br>
+<input type="number" id="goal" placeholder="Sleep Goal"><br><br>
+
+<button onclick="registerUser()">Register</button>
+
+<p id="result"></p>
+
+<script>
+function registerUser() {
+    const data = {
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        password: document.getElementById("password").value,
+        sleepGoal: parseInt(document.getElementById("goal").value)
+    };
+
+    fetch("http://localhost:8081/users/register", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(response => {
+        document.getElementById("result").innerText = "User Registered!";
+    })
+    .catch(err => {
+        document.getElementById("result").innerText = "Error occurred";
+    });
+}
+</script>
+
+</body>
+</html>
