@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamSync | Sleep Scheduler</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <script src="https://unpkg.com/chart.js/dist/chart.umd.js"></script>
+</head>
+<body>
+    <div class="background-effects">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+    
+    <!-- Auth View -->
+    <main id="auth-view" class="glass-container view active">
+        <header>
+            <div class="logo">
+                <i class="ri-moon-clear-fill"></i>
+                <span>DreamSync</span>
+            </div>
+            <p class="subtitle">Welcome to your personal sleep assistant.</p>
+        </header>
+
+        <div class="auth-tabs">
+            <button class="auth-tab-btn active" data-target="login">Login</button>
+            <button class="auth-tab-btn" data-target="register">Register</button>
+        </div>
+
+        <form id="login-form" class="custom-form auth-form active">
+            <div class="input-group">
+                <i class="ri-mail-line"></i>
+                <input type="email" id="login-email" placeholder="Email Address" required>
+            </div>
+            <div class="input-group">
+                <i class="ri-lock-line"></i>
+                <input type="password" id="login-password" placeholder="Password" required>
+                <i class="ri-eye-off-line toggle-password" data-target="login-password"></i>
+            </div>
+            <div class="auth-extras">
+                <label class="remember-me">
+                    <input type="checkbox" id="remember-me">
+                    <span>Remember me</span>
+                </label>
+                <a href="#" class="forgot-pwd">Forgot Password?</a>
+            </div>
+            <button type="submit" class="submit-btn">
+                <span>Sign In</span>
+                <i class="ri-login-box-line"></i>
+            </button>
+        </form>
+
+        <form id="register-form" class="custom-form auth-form" style="display: none;">
+            <div class="input-group">
+                <i class="ri-user-line"></i>
+                <input type="text" id="name" placeholder="Full Name" required>
+            </div>
+            <div class="input-group">
+                <i class="ri-mail-line"></i>
+                <input type="email" id="email" placeholder="Email Address" required>
+            </div>
+            <div class="input-group">
+                <i class="ri-lock-line"></i>
+                <input type="password" id="password" placeholder="Password" required>
+                <i class="ri-eye-off-line toggle-password" data-target="password"></i>
+            </div>
+            <div class="password-strength">
+                <div class="strength-bar" id="strength-bar"></div>
+                <span id="strength-text">Password Strength</span>
+            </div>
+            <div class="input-group">
+                <i class="ri-lock-password-line"></i>
+                <input type="password" id="confirm-password" placeholder="Confirm Password" required>
+                <i class="ri-eye-off-line toggle-password" data-target="confirm-password"></i>
+            </div>
+            <div class="input-group">
+                <i class="ri-time-line"></i>
+                <input type="number" id="goal" placeholder="Sleep Goal (hrs)" step="0.5" min="1" max="24" required>
+            </div>
+            <button type="submit" class="submit-btn" style="background: linear-gradient(135deg, var(--secondary), #ec4899);">
+                <span>Create Account</span>
+                <i class="ri-user-add-line"></i>
+            </button>
+        </form>
+
+        <form id="reset-form" class="custom-form auth-form" style="display: none;">
+            <p style="text-align: center; color: var(--text-muted); margin-bottom: 1rem;">Enter your email to reset password.</p>
+            <div class="input-group">
+                <i class="ri-mail-line"></i>
+                <input type="email" id="reset-email" placeholder="Email Address" required>
+            </div>
+            <div class="input-group">
+                <i class="ri-lock-line"></i>
+                <input type="password" id="reset-password" placeholder="New Password" required>
+                <i class="ri-eye-off-line toggle-password" data-target="reset-password"></i>
+            </div>
+            <button type="submit" class="submit-btn">
+                <span>Reset Password</span>
+                <i class="ri-restart-line"></i>
+            </button>
+            <div style="text-align: center; margin-top: 1rem;">
+                <a href="#" id="back-to-login" style="color: var(--secondary); text-decoration: none; font-size: 0.9rem;">Back to Login</a>
+            </div>
+        </form>
+        
+        <div id="auth-result" class="result-message"></div>
+    </main>
+
+    <!-- Dashboard View -->
+    <main id="dashboard-view" class="glass-container view dashboard-container" style="display: none;">
+        <header class="dashboard-header">
+            <div class="logo">
+                <i class="ri-moon-clear-fill"></i>
+                <span>DreamSync Dash</span>
+            </div>
+            <div class="user-controls">
+                <span id="user-greeting">Welcome, User</span>
+                <button id="logout-btn" class="nav-btn icon-only" title="Logout"><i class="ri-logout-box-r-line"></i></button>
+            </div>
+        </header>
+
+        <nav class="dashboard-nav">
+            <button class="nav-btn active" data-target="schedule">
+                <i class="ri-calendar-todo-line"></i>
+                <span>Sleep Schedule</span>
+            </button>
+            <button class="nav-btn" data-target="record">
+                <i class="ri-zzz-line"></i>
+                <span>Add Record</span>
+            </button>
+            <button class="nav-btn" data-target="analytics">
+                <i class="ri-bar-chart-line"></i>
+                <span>View Analytics</span>
+            </button>
+        </nav>
+
+        <div class="dashboard-content">
+            <!-- Schedule Tab -->
+            <section id="schedule" class="tab-pane active">
+                <div class="hero">
+                    <h2><i class="ri-settings-4-line"></i> Create Sleep Schedule</h2>
+                    <p>Establish a consistent bedtime routine for optimal rest.</p>
+                </div>
+                <form id="schedule-form" class="custom-form">
+                    <div class="time-inputs-group">
+                        <div class="input-group">
+                            <i class="ri-moon-line"></i>
+                            <input type="time" id="sleepTime" required>
+                            <label>Bedtime</label>
+                        </div>
+                        <i class="ri-arrow-right-line separator-icon"></i>
+                        <div class="input-group">
+                            <i class="ri-sun-line"></i>
+                            <input type="time" id="wakeTime" required>
+                            <label>Wake Time</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="submit-btn hover-glow">
+                        <span>Save Schedule</span>
+                        <i class="ri-save-line"></i>
+                    </button>
+                </form>
+                <div id="schedule-result" class="result-message"></div>
+            </section>
+
+            <!-- Record Tab -->
+            <section id="record" class="tab-pane">
+                <div class="hero">
+                    <h2><i class="ri-book-read-line"></i> Add Sleep Record</h2>
+                    <p>Track your actual sleep to measure against your goals.</p>
+                </div>
+                <form id="record-form" class="custom-form">
+                    <div class="input-group">
+                        <i class="ri-calendar-line"></i>
+                        <input type="date" id="rec-date" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="ri-time-line"></i>
+                        <input type="number" id="rec-actualSleep" placeholder="Actual Sleep duration (hrs)" step="0.1" required>
+                    </div>
+                    <button type="submit" class="submit-btn hover-glow" style="background: linear-gradient(135deg, var(--secondary), #ec4899);">
+                        <span>Log Record</span>
+                        <i class="ri-add-line"></i>
+                    </button>
+                </form>
+                <div id="record-result" class="result-message"></div>
+            </section>
+
+            <!-- Analytics Tab -->
+            <section id="analytics" class="tab-pane">
+                <div class="hero">
+                    <h2><i class="ri-pie-chart-line"></i> Sleep Analytics</h2>
+                    <p>Overview of your tracked sleep data & patterns.</p>
+                </div>
+                
+                <div class="analytics-actions" style="margin-bottom: 1.5rem; display: flex; justify-content: center; gap: 1rem;">
+                    <select id="analytics-period" class="nav-btn" style="background: rgba(0,0,0,0.3); color: var(--text-main); border: 1px solid var(--glass-border); padding: 0.5rem 1rem; border-radius: 8px; outline: none; cursor: pointer;">
+                        <option value="daily" style="background: var(--bg-dark);">Daily (Pie Chart)</option>
+                        <option value="weekly" style="background: var(--bg-dark);">Weekly</option>
+                        <option value="monthly" style="background: var(--bg-dark);">Monthly</option>
+                        <option value="yearly" style="background: var(--bg-dark);">Yearly</option>
+                    </select>
+                </div>
+                
+                <div class="analytics-cards">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="ri-focus-3-line"></i></div>
+                        <div class="stat-info">
+                            <h3>Sleep Goal</h3>
+                            <p id="stat-goal">-- hrs</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(236, 72, 153, 0.2); color: #ec4899;"><i class="ri-line-chart-line"></i></div>
+                        <div class="stat-info">
+                            <h3>Avg. Sleep</h3>
+                            <p id="stat-avg">-- hrs</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(52, 211, 153, 0.2); color: #34d399;"><i class="ri-checkbox-circle-line"></i></div>
+                        <div class="stat-info">
+                            <h3>Total Logs</h3>
+                            <p id="stat-logs">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-container" style="position: relative; height:30vh; width:100%; margin-bottom: 2rem; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); border-radius: 16px; padding: 1rem;">
+                    <canvas id="sleepChart"></canvas>
+                </div>
+
+                <div class="analytics-actions">
+                    <button id="refresh-analytics-btn" class="nav-btn">
+                        <i class="ri-refresh-line"></i> Refresh Data
+                    </button>
+                </div>
+                
+                <div id="analytics-result" class="result-message"></div>
+            </section>
+        </div>
+    </main>
+
+    <script src="script.js?v=2"></script>
+</body>
+</html>
